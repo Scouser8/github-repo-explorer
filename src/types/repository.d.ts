@@ -9,4 +9,5 @@ type Repository = {
   description: string;
   forks: number;
   stargazers_count: number;
+  owner: RepositoryOwner;
 };

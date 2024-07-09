@@ -6,7 +6,7 @@ export const configureAxiosInterceptors = () => {
     (config) => {
       const accessToken = import.meta.env.VITE_GITHUB_API_TOKEN;
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`; // set in header
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
       return config;
     },

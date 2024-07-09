@@ -1,10 +1,11 @@
 import { Box } from "@mui/material";
-import AutocompleteField from "../../ui/AutocompleteField";
 import { useState } from "react";
 import axios from "../../axios";
 import { GET_REPOSITORIES_URL, PER_PAGE_DEFAULT } from "../../constants";
+import SearchField from "../../ui/SearchField";
+import RepositoriesList from "../RepositoriesList";
 
-const SEARCH_FIELD_LABEL = "Search for repositories";
+const SEARCH_FIELD_PLACEHOLDER = "Search for repositories";
 
 export const SearchPage = () => {
   const [searchResults, setSearchResults] = useState([]);
@@ -19,11 +20,16 @@ export const SearchPage = () => {
     }
   };
   return (
-    <Box>
-      <AutocompleteField
-        label={SEARCH_FIELD_LABEL}
+    <Box className="gap-0">
+      <SearchField
+        placeholder={SEARCH_FIELD_PLACEHOLDER}
         searchResults={searchResults}
         handleSearch={handleFetchRepositories}
+        className="w-80"
+      />
+      <RepositoriesList
+        repositories={searchResults}
+        refetchRepositories={handleFetchRepositories}
       />
     </Box>
   );

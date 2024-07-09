@@ -17,7 +17,7 @@ export default function Layout(props: Props) {
     <>
       <ToastContainer />
       <Header />
-      <Box component="main" className="p-8">
+      <Box component="main" className="p-8 min-h-[87vh]">
         {children}
       </Box>
       <Footer />

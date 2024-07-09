@@ -2,9 +2,11 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDebounce } from "../hooks";
 
-type Props<T> = {
+type SearchResult = { id: number; label: string };
+
+type Props = {
   label: string;
-  searchResults: T[];
+  searchResults: SearchResult[];
   handleSearch: (searchValue: string) => void;
   debounce?: boolean;
   debounceDelay?: number;
@@ -12,7 +14,7 @@ type Props<T> = {
 
 const DEFAULT_DEBOUNCE_DELAY_MS = 500;
 
-const AutocompleteField = <T,>(props: Props<T>) => {
+const AutocompleteField = (props: Props) => {
   const {
     label,
     searchResults,
@@ -46,6 +48,9 @@ const AutocompleteField = <T,>(props: Props<T>) => {
       id="free-solo-2-demo"
       disableClearable
       options={searchResults}
+      getOptionLabel={(option) =>
+        (option as SearchResult)?.label || (option as string)
+      }
       renderInput={(params) => (
         <TextField
           {...params}

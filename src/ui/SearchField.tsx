@@ -1,24 +1,28 @@
 import { InputAdornment, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDebounce } from "../hooks";
 import { Search } from "@mui/icons-material";
 
 type SearchResult = { id: number; label: string };
 
 type Props = {
+  value: string;
+  setValue: (val: string) => void;
   placeholder: string;
   searchResults: SearchResult[];
-  handleSearch: (searchValue: string) => void;
+  handleSearch: () => void;
   debounce?: boolean;
   debounceDelay?: number;
   className?: string;
 };
 
-const NO_DEBOUNCE_MS = 500;
+const NO_DEBOUNCE_MS = 0;
 const DEFAULT_DEBOUNCE_DELAY_MS = 500;
 
 const SearchField = (props: Props) => {
   const {
+    value,
+    setValue,
     placeholder,
     handleSearch,
     debounce = false,
@@ -26,19 +30,17 @@ const SearchField = (props: Props) => {
     className,
   } = props;
 
-  const [inputValue, setInputValue] = useState("");
-
   const debouncedInputValue = useDebounce(
-    inputValue,
+    value,
     debounce ? debounceDelay : NO_DEBOUNCE_MS
   );
 
   useEffect(() => {
-    handleSearch(debouncedInputValue);
+    handleSearch();
   }, [debouncedInputValue]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+    setValue(e.target.value);
   };
 
   return (

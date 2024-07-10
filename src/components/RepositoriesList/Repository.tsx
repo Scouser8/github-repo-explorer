@@ -1,15 +1,17 @@
 import { ForkLeft, Star } from "@mui/icons-material";
 import { Box, Button, Typography } from "@mui/material";
-import { useState } from "react";
 import axios from "../../axios";
 import { STAR_UNSTAR_REPOSITORY_URL } from "../../constants";
 import { toast } from "react-toastify";
 
-type Props = { repository: Repository; refetchRepositories: Function };
+type Props = {
+  repository: Repository;
+  refetchRepositories: Function;
+  isStarred: boolean;
+};
 
 const Repository = (props: Props) => {
-  const { repository, refetchRepositories } = props;
-  const [isStarred, setIsStarred] = useState(false);
+  const { repository, refetchRepositories, isStarred } = props;
 
   const repositoryOwner = repository.owner.login;
 
@@ -20,17 +22,12 @@ const Repository = (props: Props) => {
     if (isStarred) {
       await axios.delete(url);
     } else {
-      await axios.put(
-        url,
-        {},
-        { headers: { "X-GitHub-Api-Version": "2022-11-28" } }
-      );
+      await axios.put(url);
     }
-    const message = `${repository.name} ${
+    const message = `Repository ${repository.full_name} ${
       !!isStarred ? "unstarred" : "starred"
     } successfully!`;
     toast.success(message);
-    setIsStarred((starred) => !starred);
     refetchRepositories();
   };
   return (

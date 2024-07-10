@@ -1,24 +1,33 @@
 import { Box } from "@mui/material";
 import Repository from "./Repository";
 import { memo } from "react";
+import { useRepositoryStore } from "../../store";
 
-type Props = {
-  repositories: Repository[];
-  starredRepositories: Record<string, boolean>;
-  refetchRepositories: Function;
-};
+type Props = { refetchRepositories: Function };
 
 const RepositoriesList = (props: Props) => {
-  const { repositories, starredRepositories, refetchRepositories } = props;
+  const { refetchRepositories } = props;
 
+  const { searchResults, starredRepositories } = useRepositoryStore(
+    (state) => state
+  );
+
+  const starredReposMap = starredRepositories?.reduce(
+    (acc: Record<string, boolean>, current: Repository) => {
+      const newMap = { ...acc };
+      newMap[current.full_name] = true;
+      return newMap;
+    },
+    {}
+  );
   return (
     <Box>
-      {repositories.map((repo) => (
+      {searchResults.map((repo) => (
         <Repository
           key={repo.id}
           repository={repo}
           refetchRepositories={refetchRepositories}
-          isStarred={starredRepositories[repo.full_name]}
+          isStarred={starredReposMap[repo.full_name]}
         />
       ))}
     </Box>

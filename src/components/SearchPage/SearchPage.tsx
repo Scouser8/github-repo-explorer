@@ -8,13 +8,16 @@ import {
 } from "../../constants";
 import SearchField from "../../ui/SearchField";
 import RepositoriesList from "../RepositoriesList";
+import { useRepositoryStore } from "../../store";
 
 const SEARCH_FIELD_PLACEHOLDER = "Search for repositories";
 
 export const SearchPage = () => {
   const [searchValue, setSearchValue] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [starredRepositories, setStarredRepositories] = useState({});
+
+  const { setSearchResults, setStarredRepositories } = useRepositoryStore(
+    (state) => state
+  );
 
   const handleFetchRepositories = () => {
     if (searchValue?.trim() !== "") {
@@ -30,15 +33,7 @@ export const SearchPage = () => {
         }),
       ]).then(([searchRepos, starredRepos]) => {
         setSearchResults(searchRepos.data.items);
-        const starredReposMap = starredRepos?.data?.reduce(
-          (acc: Record<string, boolean>, current: Repository) => {
-            const newMap = { ...acc };
-            newMap[current.full_name] = true;
-            return newMap;
-          },
-          {}
-        );
-        setStarredRepositories({ ...starredReposMap });
+        setStarredRepositories(starredRepos.data);
       });
     } else {
       setSearchResults([]);
@@ -51,16 +46,11 @@ export const SearchPage = () => {
         value={searchValue}
         setValue={setSearchValue}
         placeholder={SEARCH_FIELD_PLACEHOLDER}
-        searchResults={searchResults}
         handleSearch={handleFetchRepositories}
         className="w-80"
         debounce
       />
-      <RepositoriesList
-        repositories={searchResults}
-        starredRepositories={starredRepositories}
-        refetchRepositories={handleFetchRepositories}
-      />
+      <RepositoriesList refetchRepositories={handleFetchRepositories} />
     </Box>
   );
 };

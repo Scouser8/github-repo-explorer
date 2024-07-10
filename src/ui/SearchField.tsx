@@ -3,13 +3,10 @@ import { useEffect } from "react";
 import { useDebounce } from "../hooks";
 import { Search } from "@mui/icons-material";
 
-type SearchResult = { id: number; label: string };
-
 type Props = {
   value: string;
   setValue: (val: string) => void;
   placeholder: string;
-  searchResults: SearchResult[];
   handleSearch: () => void;
   debounce?: boolean;
   debounceDelay?: number;
